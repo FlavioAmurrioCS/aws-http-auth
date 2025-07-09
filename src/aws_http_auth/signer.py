@@ -35,7 +35,7 @@ def sign_requests(
     if x_amz_target is None:
         msg = "X-Amz-Target header is required for signing requests"
         raise ValueError(msg)
-    content_type = headers.get("Content-Type") or "application/x-amz-json-1.0"
+    content_type = headers.get("Content-Type") or "application/x-amz-json-1.1"
     t = datetime.datetime.now(tz=datetime.timezone.utc)
     x_amz_date = t.strftime("%Y%m%dT%H%M%SZ")
     date_stamp = t.strftime("%Y%m%d")

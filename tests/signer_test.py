@@ -10,7 +10,7 @@ def test_request_signing() -> None:
 
     creds = AWSCredentials(
         aws_access_key_id="aws_access_key_id",
-        aws_secret_access_key="aws_secret_access",
+        aws_secret_access_key="aws_secret_access_key",
         aws_session_token="aws_session_token",
     )
 
@@ -37,7 +37,7 @@ def test_request_signing() -> None:
             "Content-Type": "application/json",
             "X-Amz-Date": "20231001T120000Z",
             "X-Amz-Target": "X-Amz-Target",
-            "Authorization": "AWS4-HMAC-SHA256 Credential=aws_access_key_id/20231001/us-east-1/secretsmanager/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-target, Signature=78377ced44802809578beb2c9a9d5658175dbc866e7389aa6d3c263982e852b7",  # noqa: E501
+            "Authorization": "AWS4-HMAC-SHA256 Credential=aws_access_key_id/20231001/us-east-1/secretsmanager/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-target, Signature=79e9ce2afdd1df1ff87e0e0fdc40356486f7132bc375cb9f3f073bbad747a35e",  # noqa: E501
             "X-Amz-Security-Token": "aws_session_token",
         }
 
