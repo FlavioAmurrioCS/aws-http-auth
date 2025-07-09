@@ -4,8 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aws-http-auth"
-# dynamic = ["version"]
-version = "0.1.0"
+dynamic = ["version"]
 description = "Lightweight AWS SigV4 signing and HTTP authentication for httpx, requests, and raw HTTP clients—without the weight of boto3."
 readme = "README.md"
 requires-python = ">=3.8"
