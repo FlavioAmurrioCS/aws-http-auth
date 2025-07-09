@@ -17,22 +17,21 @@ if sys.platform == "emscripten":
 
 
 from typing import TYPE_CHECKING
+from typing import cast
 
 from aws_http_auth.signer import sign_requests
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Mapping
+    from typing import TypeVar
 
     import httpx
     import requests
+    from typing_extensions import TypeIs
 
     from aws_http_auth.credentials import AWSCredentials
 
-
-try:
-    from httpx import Auth
-except ImportError:
-    Auth = object  # type: ignore[misc,assignment,unused-ignore]
+    T = TypeVar("T", bound="httpx.Request | requests.PreparedRequest")
 
 try:
     from requests.auth import AuthBase
@@ -40,31 +39,32 @@ except ImportError:
     AuthBase = object  # type: ignore[misc,assignment]
 
 
-class AWSV4SignerAuth(Auth, AuthBase):  # pyright: ignore[reportGeneralTypeIssues] # pyrefly: ignore[invalid-inheritance]
+def is_prepared_request(
+    obj: httpx.Request | requests.PreparedRequest,
+) -> TypeIs[requests.PreparedRequest]:
+    return obj.__class__.__name__ == "PreparedRequest"
+
+
+class AWSV4SignerAuth(AuthBase):  # pyright: ignore[reportGeneralTypeIssues] # pyrefly: ignore[invalid-inheritance]
     def __init__(self, credentials: AWSCredentials) -> None:
         self.credentials = credentials
 
-    def auth_flow(self, request: httpx.Request) -> Generator[httpx.Request, httpx.Response, None]:
+    def __call__(self, r: T) -> T:
+        creds = self.credentials
+        method = r.method or "GET"
+        url = str(r.url)
+        body: bytes
+        if is_prepared_request(r):  # noqa: SIM108
+            body = r.body  # type: ignore[assignment]
+        else:
+            body = cast("httpx.Request", r).content
+        headers: Mapping[str, str] = r.headers  # pyrefly: ignore[bad-assignment]
         signed_headers = sign_requests(
-            creds=self.credentials,
-            method=request.method,
-            url=str(request.url),
-            body=request.content,
-            headers=request.headers,
-        )
-
-        for key, value in signed_headers.items():
-            request.headers[key] = value
-
-        yield request
-
-    def __call__(self, r: requests.PreparedRequest) -> requests.PreparedRequest:
-        signed_headers = sign_requests(
-            creds=self.credentials,
-            method=r.method or "GET",
-            url=str(r.url),
-            body=r.body,  # type: ignore[arg-type]
-            headers=r.headers or {},
+            creds=creds,
+            method=method,
+            url=url,
+            body=body,
+            headers=headers,
         )
 
         for key, value in signed_headers.items():
