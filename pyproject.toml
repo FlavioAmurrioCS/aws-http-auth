@@ -4,7 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aws-http-auth"
-dynamic = ["version"]
+# dynamic = ["version"]
+version = "0.1.0"
 description = "Lightweight AWS SigV4 signing and HTTP authentication for httpx, requests, and raw HTTP clients—without the weight of boto3."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -31,8 +32,10 @@ dependencies = [
 
 [project.optional-dependencies]
 tests = [
-  "pytest",
+  "pytest<8.4.0",
   "tomli ; python_version < '3.11'",
+  "httpx",
+  "requests",
 ]
 types = [
   "aws-http-auth[tests]",
@@ -41,6 +44,8 @@ types = [
   "pyrefly",
   "pyright[nodejs]",
   "ty",
+  "types-requests",
+  "pyodide-http",
 ]
 
 [project.urls]
