@@ -7,7 +7,7 @@ name = "aws-http-auth"
 dynamic = ["version"]
 description = "Lightweight AWS SigV4 signing and HTTP authentication for httpx, requests, and raw HTTP clients—without the weight of boto3."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = "MIT"
 keywords = []
 authors = [
@@ -16,7 +16,6 @@ authors = [
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -77,6 +76,16 @@ extra-dependencies = [
 
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/aws_http_auth tests}"
+
+[[tool.hatch.envs.hatch-test.matrix]]
+python = [
+  "3.9",
+  "3.10",
+  "3.11",
+  "3.12",
+  "3.13",
+  "3.14",
+]
 ###############################################################################
 # endregion: hatch
 ###############################################################################
@@ -118,7 +127,7 @@ exclude_lines = [
 # region: pyright
 ###############################################################################
 [tool.pyright]
-pythonVersion = "3.8"
+pythonVersion = "3.9"
 ###############################################################################
 # endregion: pyright
 ###############################################################################
@@ -127,7 +136,7 @@ pythonVersion = "3.8"
 # region: mypy
 ###############################################################################
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 check_untyped_defs = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
